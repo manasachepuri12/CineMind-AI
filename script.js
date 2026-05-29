@@ -7,16 +7,8 @@ async function searchMovie() {
 
     try {
 
-        const movieName =
-            document.getElementById("movieInput").value.trim();
-
-        if (!movieName) {
-            alert("Please enter a movie name");
-            return;
-        }
-
-       const response = await fetch(
-`${BASE_URL}/search?query=${movieName}`
+        const response = await fetch(
+    `${BASE_URL}/search?query=${movieName}`
 );
 
         const data = await response.json();
@@ -90,8 +82,8 @@ async function showMovieDetails(movieId) {
     try {
 
         const response = await fetch(
-            `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
-        );
+        `${BASE_URL}/${movieId}`
+    );
 
         const movie = await response.json();
 
@@ -160,9 +152,9 @@ async function watchTrailer(movieId) {
 
     try {
 
-        const response = await fetch(
-            `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`
-        );
+         const response = await fetch(
+        `${BASE_URL}/${movieId}/trailers`
+    );
 
         const data = await response.json();
 
@@ -198,17 +190,9 @@ async function watchTrailer(movieId) {
 async function loadRecommendations(movieId) {
 
     try {
-
-        const genreId =
-    window.currentMovie.genre_ids
-        ? window.currentMovie.genre_ids[0]
-        : window.currentMovie.genres[0].id;
-
-const language = window.currentMovie.original_language;
-
-const similarUrl =
-`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&with_original_language=${language}&sort_by=popularity.desc`;
-const response = await fetch(similarUrl);
+const response = await fetch(
+        `${BASE_URL}/${movieId}/recommendations`
+    );
         const data = await response.json();
 
         let recommendationHTML = "";
@@ -268,9 +252,7 @@ async function loadTrendingMovies() {
 
     try {
 
-        const response = await fetch(
-`${BASE_URL}/trending`
-);
+       const response = await fetch(`${BASE_URL}/trending`);
 
         const data = await response.json();
 
@@ -342,9 +324,7 @@ async function loadFavorites() {
 
     for (const movieId of favorites) {
 
-        const response = await fetch(
-            `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
-        );
+        const response = fetch(`${BASE_URL}/${movieId}`)
 
         const movie = await response.json();
 
