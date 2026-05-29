@@ -1,4 +1,4 @@
-const API_KEY = "be7437b053cf1ccce83e70c225b9aeb4";
+const API_KEY = "505a1e1ae7a56d5535970cdafbaacdef";
 
 /* Search Movie */
 
