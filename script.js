@@ -79,6 +79,72 @@ window.currentMovie = movie;
     }
 
 }
+async function showMovieDetails(movieId) {
+
+    try {
+
+        const response = await fetch(
+            `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
+        );
+
+        const movie = await response.json();
+
+        document.getElementById("movieContainer").innerHTML = `
+            <div class="movie-card">
+
+                <img
+                    src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+                    alt="${movie.title}"
+                >
+
+                <div class="movie-details">
+
+                    <h2>${movie.title}</h2>
+
+                    <p>${movie.overview}</p>
+
+                    <p>📅 Release Date: ${movie.release_date}</p>
+
+                    <div class="stats-container">
+
+                        <div class="stat-card">
+                            ⭐ Rating
+                            <h3>${movie.vote_average.toFixed(1)}</h3>
+                        </div>
+
+                        <div class="stat-card">
+                            🔥 Popularity
+                            <h3>${Math.round(movie.popularity)}</h3>
+                        </div>
+
+                        <div class="stat-card">
+                            🗳 Votes
+                            <h3>${movie.vote_count}</h3>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+        window.currentMovie = movie;
+
+        loadRecommendations(movie.id);
+
+        window.scrollTo({
+            top: 250,
+            behavior: "smooth"
+        });
+
+    } catch(error) {
+
+        console.error(error);
+
+    }
+
+}
 
 /* AI Recommendations */
 
@@ -86,11 +152,15 @@ async function loadRecommendations(movieId) {
 
     try {
 
-        const genreId = window.currentMovie.genre_ids[0];
+        const genreId =
+    window.currentMovie.genre_ids
+        ? window.currentMovie.genre_ids[0]
+        : window.currentMovie.genres[0].id;
+
+const language = window.currentMovie.original_language;
 
 const similarUrl =
-`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&with_original_language=te&sort_by=popularity.desc`;
-
+`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&with_original_language=${language}&sort_by=popularity.desc`;
 const response = await fetch(similarUrl);
         const data = await response.json();
 
@@ -114,7 +184,8 @@ const response = await fetch(similarUrl);
         recommendations.forEach(movie => {
 
             recommendationHTML += `
-                <div class="trending-card">
+                <div class="trending-card"
+     onclick="showMovieDetails(${movie.id})">
 
                     <img
                         src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
@@ -163,7 +234,8 @@ async function loadTrendingMovies() {
             .forEach(movie => {
 
                 html += `
-                    <div class="trending-card">
+                   <div class="trending-card"
+                   onclick="showMovieDetails(${movie.id})">
 
                         <img
                             src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
@@ -186,7 +258,18 @@ async function loadTrendingMovies() {
         alert("Trending movies failed to load");
 
     }
+    
 
 }
 
 loadTrendingMovies();
+
+document
+    .getElementById("movieInput")
+    .addEventListener("keypress", function(event) {
+
+        if (event.key === "Enter") {
+            searchMovie();
+        }
+
+    });
