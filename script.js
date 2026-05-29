@@ -357,10 +357,11 @@ async function loadFavorites() {
                 >
 
                 <h4>${movie.title}</h4>
-                <button
-            onclick="event.stopPropagation(); removeFromFavorites(${movie.id})">
-            ❌ Remove
-        </button>
+
+<button class="remove-btn"
+onclick="event.stopPropagation(); removeFromFavorites(${movie.id})">
+Remove
+</button>
             </div>
         `;
     }
@@ -389,6 +390,20 @@ function clearFavorites() {
     loadFavorites();
 
 }
+function removeFromFavorites(movieId) {
+
+    let favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    favorites = favorites.filter(id => id !== movieId);
+
+    localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+    );
+
+    loadFavorites();
+}
 loadTrendingMovies();
 loadFavorites();
 document
@@ -400,3 +415,16 @@ document
         }
 
     });
+const themeBtn = document.getElementById("themeBtn");
+
+themeBtn.addEventListener("click", () => {
+
+    document.body.classList.toggle("light-mode");
+
+    if (document.body.classList.contains("light-mode")) {
+        themeBtn.innerHTML = "🌙 Dark Mode";
+    } else {
+        themeBtn.innerHTML = "☀️ Light Mode";
+    }
+
+});
