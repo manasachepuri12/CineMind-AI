@@ -1,4 +1,5 @@
-const API_KEY = "505a1e1ae7a56d5535970cdafbaacdef";
+const BASE_URL =
+"https://cinemind-qzpm.onrender.com/api/movies";
 
 /* Search Movie */
 
@@ -14,9 +15,9 @@ async function searchMovie() {
             return;
         }
 
-        const response = await fetch(
-            `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${movieName}`
-        );
+       const response = await fetch(
+`${BASE_URL}/search?query=${movieName}`
+);
 
         const data = await response.json();
 
@@ -268,8 +269,8 @@ async function loadTrendingMovies() {
     try {
 
         const response = await fetch(
-            `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`
-        );
+`${BASE_URL}/trending`
+);
 
         const data = await response.json();
 
