@@ -44,7 +44,12 @@ window.currentMovie = movie;
                     <p>${movie.overview}</p>
 
                     <p>📅 Release Date: ${movie.release_date}</p>
-
+                    <button onclick="watchTrailer(${movie.id})">
+                        🎥 Watch Trailer
+                    </button>
+                    <button onclick="addToFavorites(${movie.id})">
+                        ⭐ Add to Favorites
+                    </button>
                     <div class="stats-container">
 
                         <div class="stat-card">
@@ -70,7 +75,7 @@ window.currentMovie = movie;
         `;
 
         loadRecommendations(movie.id);
-        
+
     } catch (error) {
 
         console.error(error);
@@ -104,7 +109,12 @@ async function showMovieDetails(movieId) {
                     <p>${movie.overview}</p>
 
                     <p>📅 Release Date: ${movie.release_date}</p>
-
+                     <button onclick="watchTrailer(${movie.id})">
+                        🎥 Watch Trailer
+                    </button>
+                    <button onclick="addToFavorites(${movie.id})">
+                        ⭐ Add to Favorites
+                    </button>
                     <div class="stats-container">
 
                         <div class="stat-card">
@@ -137,6 +147,42 @@ async function showMovieDetails(movieId) {
             top: 250,
             behavior: "smooth"
         });
+
+    } catch(error) {
+
+        console.error(error);
+
+    }
+
+}
+async function watchTrailer(movieId) {
+
+    try {
+
+        const response = await fetch(
+            `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`
+        );
+
+        const data = await response.json();
+
+        const trailer = data.results.find(
+            video =>
+                video.site === "YouTube" &&
+                video.type === "Trailer"
+        );
+
+        if (trailer) {
+
+            window.open(
+                `https://www.youtube.com/watch?v=${trailer.key}`,
+                "_blank"
+            );
+
+        } else {
+
+            alert("Trailer not available.");
+
+        }
 
     } catch(error) {
 
@@ -198,7 +244,8 @@ const response = await fetch(similarUrl);
             `;
 
         });
-
+        document.getElementById("recommendationTitle").style.display =
+"block";
         document.getElementById("recommendation").innerHTML = `
             <div class="recommendation-row">
                 ${recommendationHTML}
@@ -261,9 +308,89 @@ async function loadTrendingMovies() {
     
 
 }
+function addToFavorites(movieId) {
 
+    let favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (!favorites.includes(movieId)) {
+
+        favorites.push(movieId);
+
+        localStorage.setItem(
+            "favorites",
+            JSON.stringify(favorites)
+        );
+        loadFavorites();
+
+        alert("Added to Favorites ⭐");
+
+    } else {
+
+        alert("Already in Favorites");
+
+    }
+
+}
+async function loadFavorites() {
+
+    const favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    let html = "";
+
+    for (const movieId of favorites) {
+
+        const response = await fetch(
+            `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
+        );
+
+        const movie = await response.json();
+
+        html += `
+            <div class="trending-card"
+                 onclick="showMovieDetails(${movie.id})">
+
+                <img
+                    src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+                    alt="${movie.title}"
+                >
+
+                <h4>${movie.title}</h4>
+                <button
+            onclick="event.stopPropagation(); removeFromFavorites(${movie.id})">
+            ❌ Remove
+        </button>
+            </div>
+        `;
+    }
+
+    document.getElementById("favoritesContainer").innerHTML =
+        html;
+}
+function removeFromFavorites(movieId) {
+
+    let favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    favorites = favorites.filter(id => id !== movieId);
+
+    localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+    );
+
+    loadFavorites();
+}
+function clearFavorites() {
+
+    localStorage.removeItem("favorites");
+
+    loadFavorites();
+
+}
 loadTrendingMovies();
-
+loadFavorites();
 document
     .getElementById("movieInput")
     .addEventListener("keypress", function(event) {

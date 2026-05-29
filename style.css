@@ -256,3 +256,30 @@ button:hover{
 .recommendation-row::-webkit-scrollbar-track{
     background:#181818;
 }
+#favoritesContainer{
+    display:flex;
+    overflow-x:auto;
+    gap:20px;
+    padding:20px;
+    scroll-behavior:smooth;
+}
+.favorites-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:20px;
+}
+
+.clear-btn{
+    background:#ff0000;
+    color:white;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.clear-btn:hover{
+    transform:scale(1.05);
+}

@@ -32,8 +32,22 @@
       <h2>🔥 Trending Movies</h2>
 <div id="trendingMovies"></div> 
 <br> 
-<h2>🤖 AI Recommendations</h2>
+<h2 id="recommendationTitle" style="display:none;">
+    🤖 AI Recommendations
+</h2>
 <div id="recommendation"></div>  
+<div class="favorites-header">
+
+    <h2>⭐ Favorite Movies</h2>
+
+    <button class="clear-btn"
+            onclick="clearFavorites()">
+        🗑 Clear Favorites
+    </button>
+
+</div>
+
+<div id="favoritesContainer"></div>
     <script src="script.js"></script>
 </body>
 </html>
