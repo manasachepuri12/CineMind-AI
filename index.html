@@ -4,25 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineMind AI</title>
-
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
-
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>🎬 CineMind AI</h1>
+    <header>
+        <h1>🎬 CineMind AI</h1>
+        <p class="tagline">
+            Discover Movies, Ratings and AI Recommendations
+        </p>
+    </header>
     <div class="search-container">
         <input
-            type="text"
-            id="movieInput"
-            placeholder="Search for a movie..."
-        >
-        <button onclick="searchMovie()">
-            Search
-        </button>
+    type="text"
+    id="movieInput"
+    placeholder="Search for a movie..."
+>
+<button onclick="searchMovie()">
+    Search
+</button>
     </div>
     <div id="movieContainer"></div>
-    <canvas id="movieChart"></canvas>
+      <h2>🔥 Trending Movies</h2>
+<div id="trendingMovies"></div>  
+<h2>🤖 AI Recommendations</h2>
+<div id="recommendation"></div>  
     <script src="script.js"></script>
 </body>
 </html>
