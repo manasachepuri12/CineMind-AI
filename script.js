@@ -70,7 +70,7 @@ window.currentMovie = movie;
         `;
 
         loadRecommendations(movie.id);
-
+        
     } catch (error) {
 
         console.error(error);
