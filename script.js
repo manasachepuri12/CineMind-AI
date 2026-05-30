@@ -87,6 +87,8 @@ async function showMovieDetails(movieId) {
     );
 
         const movie = await response.json();
+        console.log("Selected Movie:", movie.title);
+console.log("Selected Movie ID:", movie.id);
 
         document.getElementById("movieContainer").innerHTML = `
             <div class="movie-card">
@@ -189,7 +191,7 @@ async function watchTrailer(movieId) {
 /* AI Recommendations */
 
 async function loadRecommendations(movieId) {
-
+console.log("Loading recommendations for:", movieId);
     try {
 const response = await fetch(
     `${BASE_URL}/${movieId}/smart-recommendations`
