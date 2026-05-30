@@ -4,7 +4,8 @@ const BASE_URL =
 /* Search Movie */
 
 async function searchMovie() {
-
+const movieName =
+        document.getElementById("movieInput").value;
     try {
 
         const response = await fetch(
@@ -191,10 +192,11 @@ async function loadRecommendations(movieId) {
 
     try {
 const response = await fetch(
-        `${BASE_URL}/${movieId}/recommendations`
-    );
+    `${BASE_URL}/${movieId}/smart-recommendations`
+);
         const data = await response.json();
 
+console.log("Smart Recommendations:", data);
         let recommendationHTML = "";
 
         const recommendations = data.results
@@ -203,7 +205,7 @@ const response = await fetch(
         movie.id !== window.currentMovie.id
     )
     .slice(0, 12);
-
+console.log(recommendations.length);
         if (recommendations.length === 0) {
 
             document.getElementById("recommendation").innerHTML =
@@ -236,6 +238,7 @@ const response = await fetch(
                 ${recommendationHTML}
             </div>
         `;
+        console.log(recommendationHTML);
 
     } catch (error) {
 
@@ -247,14 +250,18 @@ const response = await fetch(
 }
 
 /* Trending Movies */
-
 async function loadTrendingMovies() {
 
     try {
 
-       const response = await fetch(`${BASE_URL}/trending`);
+        const response = await fetch(`${BASE_URL}/trending`);
 
         const data = await response.json();
+
+        if (!Array.isArray(data.results)) {
+            console.error("results is not an array", data);
+            return;
+        }
 
         let html = "";
 
@@ -264,8 +271,8 @@ async function loadTrendingMovies() {
             .forEach(movie => {
 
                 html += `
-                   <div class="trending-card"
-                   onclick="showMovieDetails(${movie.id})">
+                    <div class="trending-card"
+                         onclick="showMovieDetails(${movie.id})">
 
                         <img
                             src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
@@ -279,8 +286,7 @@ async function loadTrendingMovies() {
 
             });
 
-        document.getElementById("trendingMovies").innerHTML =
-            html;
+        document.getElementById("trendingMovies").innerHTML = html;
 
     } catch (error) {
 
@@ -288,8 +294,6 @@ async function loadTrendingMovies() {
         alert("Trending movies failed to load");
 
     }
-    
-
 }
 function addToFavorites(movieId) {
 
@@ -323,11 +327,12 @@ async function loadFavorites() {
     let html = "";
 
     for (const movieId of favorites) {
+       const response =
+        await fetch(`${BASE_URL}/${movieId}`);
 
-        const response = fetch(`${BASE_URL}/${movieId}`)
-
-        const movie = await response.json();
-
+    const movie =
+        await response.json();
+        console.log(movie);
         html += `
             <div class="trending-card"
                  onclick="showMovieDetails(${movie.id})">
